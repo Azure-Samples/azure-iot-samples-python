@@ -6,6 +6,7 @@ import sys
 import iothub_service_client
 # pylint: disable=E0611
 from iothub_service_client import IoTHubDeviceMethod, IoTHubError
+from builtins import input
 
 # The service connection string to authenticate with your IoT hub.
 # Using the Azure CLI:
@@ -34,13 +35,7 @@ def iothub_devicemethod_sample_run():
         print ( "Response status          : {0}".format(response.status) )
         print ( "Response payload         : {0}".format(response.payload) )
 
-        try:
-            # Try Python 2.xx first
-            raw_input("Press Enter to continue...\n")
-        except:
-            pass
-            # Use Python 3.xx in the case of exception
-            input("Press Enter to continue...\n")
+        input("Press Enter to continue...\n")
 
     except IoTHubError as iothub_error:
         print ( "" )

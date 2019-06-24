@@ -13,7 +13,7 @@ from builtins import input
 
 # The service connection string to authenticate with your IoT hub.
 # Using the Azure CLI:
-# az iot hub show-connection-string --hub-name {your iot hub name}
+# az iot hub show-connection-string --hub-name {your iot hub name} --policy-name service
 CONNECTION_STRING = "{Your IoT hub service connection string}"
 DEVICE_ID = "MyPythonDevice"
 

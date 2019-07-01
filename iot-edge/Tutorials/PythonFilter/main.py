@@ -29,29 +29,33 @@ PROTOCOL = IoTHubTransportProvider.MQTT
 CONNECTION_STRING = "[Device Connection String]"
 
 # Callback received when the message that we're forwarding is processed.
+
+
 def send_confirmation_callback(message, result, user_context):
     global SEND_CALLBACKS
-    print ( "Confirmation[%d] received for message with result = %s" % (user_context, result) )
+    print("Confirmation[%d] received for message with result = %s" % (
+        user_context, result))
     map_properties = message.properties()
     key_value_pair = map_properties.get_internals()
-    print ( "    Properties: %s" % key_value_pair )
+    print("    Properties: %s" % key_value_pair)
     SEND_CALLBACKS += 1
-    print ( "    Total calls confirmed: %d" % SEND_CALLBACKS )
+    print("    Total calls confirmed: %d" % SEND_CALLBACKS)
 
 
-# receive_message_callback is invoked when an incoming message arrives on the specified 
-# input queue (in the case of this sample, "input1").  Because this is a filter module, 
+# receive_message_callback is invoked when an incoming message arrives on the specified
+# input queue (in the case of this sample, "input1").  Because this is a filter module,
 # we will forward this message onto the "output1" queue.
 def receive_message_callback(message, hubManager):
     global RECEIVE_CALLBACKS
     message_buffer = message.get_bytearray()
     size = len(message_buffer)
-    print ( "    Data: <<<%s>>> & Size=%d" % (message_buffer[:size].decode('utf-8'), size) )
+    print("    Data: <<<%s>>> & Size=%d" %
+          (message_buffer[:size].decode('utf-8'), size))
     map_properties = message.properties()
     key_value_pair = map_properties.get_internals()
-    print ( "    Properties: %s" % key_value_pair )
+    print("    Properties: %s" % key_value_pair)
     RECEIVE_CALLBACKS += 1
-    print ( "    Total calls received: %d" % RECEIVE_CALLBACKS )
+    print("    Total calls received: %d" % RECEIVE_CALLBACKS)
     hubManager.forward_event_to_output("output1", message, 0)
     return IoTHubMessageDispositionResult.ACCEPTED
 
@@ -68,24 +72,26 @@ class HubManager(object):
         self.client.set_option("messageTimeout", MESSAGE_TIMEOUT)
         # some embedded platforms need certificate information
         self.set_certificates()
-        
-        # sets the callback when a message arrives on "input1" queue.  Messages sent to 
+
+        # sets the callback when a message arrives on "input1" queue.  Messages sent to
         # other inputs or to the default will be silently discarded.
-        self.client.set_message_callback("input1", receive_message_callback, self)
+        self.client.set_message_callback(
+            "input1", receive_message_callback, self)
 
     def set_certificates(self):
         isWindows = sys.platform.lower() in ['windows', 'win32']
         if not isWindows:
-            CERT_FILE = os.environ['EdgeModuleCACertificateFile']        
+            CERT_FILE = os.environ['EdgeModuleCACertificateFile']
             print("Adding TrustedCerts from: {0}".format(CERT_FILE))
-            
+
             # this brings in x509 privateKey and certificate
             file = open(CERT_FILE)
             try:
                 self.client.set_option("TrustedCerts", file.read())
-                print ( "set_option TrustedCerts successful" )
+                print("set_option TrustedCerts successful")
             except IoTHubClientError as iothub_client_error:
-                print ( "set_option TrustedCerts failed (%s)" % iothub_client_error )
+                print("set_option TrustedCerts failed (%s)" %
+                      iothub_client_error)
 
             file.close()
 
@@ -94,31 +100,34 @@ class HubManager(object):
         self.client.send_event_async(
             outputQueueName, event, send_confirmation_callback, send_context)
 
+
 def main(connection_string):
     try:
-        print ( "\nPython %s\n" % sys.version )
-        print ( "IoT Hub Client for Python" )
+        print("\nPython %s\n" % sys.version)
+        print("IoT Hub Client for Python")
 
         hub_manager = HubManager(connection_string)
 
-        print ( "Starting the IoT Hub Python sample using protocol %s..." % hub_manager.client_protocol )
-        print ( "The sample is now waiting for messages and will indefinitely.  Press Ctrl-C to exit. ")
+        print("Starting the IoT Hub Python sample using protocol %s..." %
+              hub_manager.client_protocol)
+        print("The sample is now waiting for messages and will indefinitely.  Press Ctrl-C to exit. ")
 
         while True:
             time.sleep(1000)
 
     except IoTHubError as iothub_error:
-        print ( "Unexpected error %s from IoTHub" % iothub_error )
+        print("Unexpected error %s from IoTHub" % iothub_error)
         return
     except KeyboardInterrupt:
-        print ( "IoTHubClient sample stopped" )
+        print("IoTHubClient sample stopped")
+
 
 if __name__ == '__main__':
     try:
         CONNECTION_STRING = os.environ['EdgeHubConnectionString']
 
     except Exception as error:
-        print ( error )
+        print(error)
         sys.exit(1)
 
     main(CONNECTION_STRING)

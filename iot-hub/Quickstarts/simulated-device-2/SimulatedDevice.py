@@ -29,8 +29,10 @@ MSG_TXT = "{\"temperature\": %.2f,\"humidity\": %.2f}"
 
 INTERVAL = 1
 
+
 def send_confirmation_callback(message, result, user_context):
-    print ( "IoT Hub responded to message with status: %s" % (result) )
+    print("IoT Hub responded to message with status: %s" % (result))
+
 
 def iothub_client_init():
     # Create an IoT Hub client
@@ -38,9 +40,12 @@ def iothub_client_init():
     return client
 
 # Handle direct method calls from IoT Hub
+
+
 def device_method_callback(method_name, payload, user_context):
     global INTERVAL
-    print ( "\nMethod callback called with:\nmethodName = %s\npayload = %s" % (method_name, payload) )
+    print("\nMethod callback called with:\nmethodName = %s\npayload = %s" %
+          (method_name, payload))
     device_method_return_value = DeviceMethodReturnValue()
     if method_name == "SetTelemetryInterval":
         try:
@@ -58,11 +63,12 @@ def device_method_callback(method_name, payload, user_context):
         device_method_return_value.status = 404
     return device_method_return_value
 
+
 def iothub_client_telemetry_sample_run():
 
     try:
         client = iothub_client_init()
-        print ( "IoT Hub device sending periodic messages, press Ctrl-C to exit" )
+        print("IoT Hub device sending periodic messages, press Ctrl-C to exit")
 
         # Set up the callback method for direct method calls from the hub.
         client.set_device_method_callback(
@@ -79,22 +85,23 @@ def iothub_client_telemetry_sample_run():
             # An IoT hub can filter on these properties without access to the message body.
             prop_map = message.properties()
             if temperature > 30:
-              prop_map.add("temperatureAlert", "true")
+                prop_map.add("temperatureAlert", "true")
             else:
-              prop_map.add("temperatureAlert", "false")
+                prop_map.add("temperatureAlert", "false")
 
             # Send the message.
-            print( "Sending message: %s" % message.get_string() )
+            print("Sending message: %s" % message.get_string())
             client.send_event_async(message, send_confirmation_callback, None)
             time.sleep(INTERVAL)
 
     except IoTHubError as iothub_error:
-        print ( "Unexpected error %s from IoTHub" % iothub_error )
+        print("Unexpected error %s from IoTHub" % iothub_error)
         return
     except KeyboardInterrupt:
-        print ( "IoTHubClient sample stopped" )
+        print("IoTHubClient sample stopped")
+
 
 if __name__ == '__main__':
-    print ( "IoT Hub Quickstart #2 - Simulated device" )
-    print ( "Press Ctrl-C to exit" )
+    print("IoT Hub Quickstart #2 - Simulated device")
+    print("Press Ctrl-C to exit")
     iothub_client_telemetry_sample_run()

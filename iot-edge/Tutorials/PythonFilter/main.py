@@ -20,7 +20,7 @@ def receive_message_listener(client):
         message = client.receive_message_on_input("input1")   # blocking call
         RECEIVED_MESSAGES += 1
         print("Message received on input1")
-        print( "    Data: <<{}>>".format(message.payload) )
+        print( "    Data: <<{}>>".format(message.data) )
         print( "    Properties: {}".format(message.custom_properties))
         print( "    Total calls received: {}".format(RECEIVED_MESSAGES))
         print("Forwarding message to output1")

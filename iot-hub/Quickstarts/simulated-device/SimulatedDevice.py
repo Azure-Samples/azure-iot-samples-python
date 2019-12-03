@@ -28,6 +28,7 @@ def iothub_client_telemetry_sample_run():
 
     try:
         client = iothub_client_init()
+        client.connect()
         print ( "IoT Hub device sending periodic messages, press Ctrl-C to exit" )
 
         while True:

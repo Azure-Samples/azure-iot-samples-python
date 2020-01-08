@@ -1,14 +1,15 @@
-import sys
-
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 # Using the Python Device SDK for IoT Hub:
 #   https://github.com/Azure/azure-iot-sdk-python
-# The sample connects to a device-specific MQTT endpoint on your IoT Hub.
-import iothub_service_client
+# The sample connects to a device-specific HTTP endpoint on your IoT Hub.
+import sys
 # pylint: disable=E0611
-from iothub_service_client import IoTHubDeviceMethod, IoTHubError
+
+from azure.iot.hub import IoTHubRegistryManager
+from azure.iot.hub.protocol.models import CloudToDeviceMethod, CloudToDeviceMethodResult, DeviceRegistryOperationError
+
 from builtins import input
 
 # The service connection string to authenticate with your IoT hub.
@@ -20,15 +21,15 @@ DEVICE_ID = "MyPythonDevice"
 # Details of the direct method to call.
 METHOD_NAME = "SetTelemetryInterval"
 METHOD_PAYLOAD = "10"
-TIMEOUT = 60
 
 def iothub_devicemethod_sample_run():
     try:
-        # Connect to your hub.
-        iothub_device_method = IoTHubDeviceMethod(CONNECTION_STRING)
+        # Create IoTHubRegistryManager
+        registry_manager = IoTHubRegistryManager(CONNECTION_STRING)
 
         # Call the direct method.
-        response = iothub_device_method.invoke(DEVICE_ID, METHOD_NAME, METHOD_PAYLOAD, TIMEOUT)
+        deviceMethod = CloudToDeviceMethod(method_name=METHOD_NAME, payload=METHOD_PAYLOAD)
+        response = registry_manager.invoke_device_method(DEVICE_ID, deviceMethod)
 
         print ( "" )
         print ( "Device Method called" )
@@ -40,9 +41,9 @@ def iothub_devicemethod_sample_run():
 
         input("Press Enter to continue...\n")
 
-    except IoTHubError as iothub_error:
+    except Exception as ex:
         print ( "" )
-        print ( "Unexpected error {0}".format(iothub_error) )
+        print ( "Unexpected error {0}".format(ex) )
         return
     except KeyboardInterrupt:
         print ( "" )

@@ -8,7 +8,7 @@ import sys
 # pylint: disable=E0611
 
 from azure.iot.hub import IoTHubRegistryManager
-from azure.iot.hub.protocol.models import CloudToDeviceMethod, CloudToDeviceMethodResult, DeviceRegistryOperationError
+from azure.iot.hub.protocol.models import CloudToDeviceMethod, CloudToDeviceMethodResult
 
 from builtins import input
 

@@ -14,7 +14,7 @@ azure-iot-samples-python provides a set of easy-to-understand, continuously-test
 
 ## Prerequisites
 
-- Python 2.7.x or 3.5.x on your development machine.  You can download Python for multiple platforms from [Python.org](https://www.python.org/downloads/).  You can verify the current version of Python on your development machine using 'python --version' or 'python3 --version'
+- Python 2.7.x or 3.5.x (or later) on your development machine.  You can download Python for multiple platforms from [Python.org](https://www.python.org/downloads/).  You can verify the current version of Python on your development machine using 'python --version' or 'python3 --version'
 
 ## Resources
 

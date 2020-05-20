@@ -23,21 +23,18 @@ from azure.eventhub.aio import EventHubConsumerClient
 # Event Hub-compatible endpoint
 # az iot hub show --query properties.eventHubEndpoints.events.endpoint --name {your IoT Hub name}
 EVENTHUB_COMPATIBLE_ENDPOINT = "{your Event Hubs compatible endpoint}"
-EVENTHUB_COMPATIBLE_ENDPOINT = "iothub-ns-yijun-ioth-3130889-4398262da5.servicebus.windows.net"
 
 # Event Hub-compatible name
 # az iot hub show --query properties.eventHubEndpoints.events.path --name {your IoT Hub name}
 EVENTHUB_COMPATIBLE_PATH = "{your Event Hubs compatible name}"
-EVENTHUB_COMPATIBLE_PATH = "yijun-iothub"
 
 # Primary key for the "service" policy to read messages
 # az iot hub policy show --name service --query primaryKey --hub-name {your IoT Hub name}
 IOTHUB_SAS_KEY = "{your service primary key}"
-IOTHUB_SAS_KEY = "3FQcB8ptGd3QSgcq7vmNwCnRwqCZA4s+Wd2zziBKjaw="
 
 # If you have access to the Event Hub-compatible connection string from the Azure portal, then
 # you can skip the Azure CLI commands above, and assign the connection string directly here.
-CONNECTION_STR = f'Endpoint=sb://{EVENTHUB_COMPATIBLE_ENDPOINT}/;SharedAccessKeyName=service;SharedAccessKey={IOTHUB_SAS_KEY};EntityPath={EVENTHUB_COMPATIBLE_PATH}';
+CONNECTION_STR = f'Endpoint={EVENTHUB_COMPATIBLE_ENDPOINT}/;SharedAccessKeyName=service;SharedAccessKey={IOTHUB_SAS_KEY};EntityPath={EVENTHUB_COMPATIBLE_PATH}'
 
 # Define callbacks to process events
 async def on_event_batch(partition_context, events):
@@ -74,8 +71,7 @@ async def main():
     async with client:
         await client.receive_batch(
             on_event_batch=on_event_batch,
-            on_error=on_error,
-            starting_position="-1",  # "-1" is from the beginning of the partition.
+            on_error=on_error
         )
 
 if __name__ == '__main__':

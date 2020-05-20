@@ -33,7 +33,7 @@ IOTHUB_SAS_KEY = "{your service primary key}"
 
 # If you have access to the Event Hub-compatible connection string from the Azure portal, then
 # you can skip the Azure CLI commands above, and assign the connection string directly here.
-CONNECTION_STR = f'Endpoint=sb://{EVENTHUB_COMPATIBLE_ENDPOINT}/;SharedAccessKeyName=service;SharedAccessKey={IOTHUB_SAS_KEY};EntityPath={EVENTHUB_COMPATIBLE_PATH}';
+CONNECTION_STR = f'Endpoint={EVENTHUB_COMPATIBLE_ENDPOINT}/;SharedAccessKeyName=service;SharedAccessKey={IOTHUB_SAS_KEY};EntityPath={EVENTHUB_COMPATIBLE_PATH}'
 
 # Define callbacks to process events
 def on_event_batch(partition_context, events):
@@ -70,8 +70,7 @@ def main():
     with client:
         client.receive_batch(
             on_event_batch=on_event_batch,
-            on_error=on_error,
-            starting_position="-1",  # "-1" is from the beginning of the partition.
+            on_error=on_error
         )
 
 if __name__ == '__main__':

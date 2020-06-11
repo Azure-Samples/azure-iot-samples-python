@@ -56,7 +56,8 @@ async def on_error(partition_context, error):
         print("An exception: {} occurred during the load balance process.".format(error))
 
 
-async def main():
+def main():
+    loop = asyncio.get_event_loop()
     client = EventHubConsumerClient.from_connection_string(
         conn_str=CONNECTION_STR,
         consumer_group="$default",
@@ -68,12 +69,14 @@ async def main():
         #     'password': '<proxy password>'
         # }
     )
-    async with client:
-        await client.receive_batch(
-            on_event_batch=on_event_batch,
-            on_error=on_error
-        )
+    try:
+        loop.run_until_complete(client.receive_batch(on_event_batch=on_event_batch, on_error=on_error))
+    except KeyboardInterrupt:
+        print("Receiving has stopped.")
+    finally:
+        loop.run_until_complete(client.close())
+        loop.stop()
+    
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
+    main()

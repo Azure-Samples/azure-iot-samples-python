@@ -67,11 +67,14 @@ def main():
         #     'password': '<proxy password>'
         # }
     )
-    with client:
-        client.receive_batch(
-            on_event_batch=on_event_batch,
-            on_error=on_error
-        )
+    try:
+        with client:
+            client.receive_batch(
+                on_event_batch=on_event_batch,
+                on_error=on_error
+            )
+    except KeyboardInterrupt:
+        print("Receiving has stopped.")
 
 if __name__ == '__main__':
     main()

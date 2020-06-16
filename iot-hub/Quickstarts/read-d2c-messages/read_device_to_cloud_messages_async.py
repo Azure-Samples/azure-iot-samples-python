@@ -43,6 +43,7 @@ async def on_event_batch(partition_context, events):
         print("Telemetry received: ", event.body_as_str())
         print("Properties (set by device): ", event.properties)
         print("System properties (set by IoT Hub): ", event.system_properties)
+        print()
     await partition_context.update_checkpoint()
 
 async def on_error(partition_context, error):

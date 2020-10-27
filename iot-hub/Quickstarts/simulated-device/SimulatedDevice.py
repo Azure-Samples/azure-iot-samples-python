@@ -36,6 +36,8 @@ def iothub_client_telemetry_sample_run():
             humidity = HUMIDITY + (random.random() * 20)
             msg_txt_formatted = MSG_TXT.format(temperature=temperature, humidity=humidity)
             message = Message(msg_txt_formatted)
+            message.content_encoding = "utf-8"
+            message.content_type = "application/json"
 
             # Add a custom application property to the message.
             # An IoT hub can filter on these properties without access to the message body.

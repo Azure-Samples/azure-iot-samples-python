@@ -15,9 +15,9 @@ import random
 
 # ensure environment variables are set for your device and IoT Central application credentials
 provisioning_host = os.getenv("PROVISIONING_HOST")
-id_scope = os.getenv("PROVISIONING_IDSCOPE")
-registration_id = os.getenv("PROVISIONING_REGISTRATION_ID")
-symmetric_key = os.getenv("PROVISIONING_SYMMETRIC_KEY")
+id_scope = os.getenv("ID_SCOPE")
+registration_id = os.getenv("DEVICE_ID")
+symmetric_key = os.getenv("DEVICE_KEY")
 
 # allows the user to quit the program from the terminal
 def stdin_listener():

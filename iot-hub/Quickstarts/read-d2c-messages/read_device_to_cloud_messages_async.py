@@ -50,8 +50,8 @@ async def on_error(partition_context, error):
     # Put your code here. partition_context can be None in the on_error callback.
     if partition_context:
         print("An exception: {} occurred during receiving from Partition: {}.".format(
-            partition_context.partition_id,
-            error
+            error,
+            partition_context.partition_id
         ))
     else:
         print("An exception: {} occurred during the load balance process.".format(error))

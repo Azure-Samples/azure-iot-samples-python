@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+import os
 import random
 import time
 
@@ -9,10 +10,14 @@ import time
 # The sample connects to a device-specific MQTT endpoint on your IoT Hub.
 from azure.iot.device import IoTHubDeviceClient, Message
 
-# The device connection string to authenticate the device with your IoT hub.
-# Using the Azure CLI:
+# The device connection authenticates your device to your IoT hub. The connection string for 
+# a device should never be stored in code. For the sake of simplicity we're using an environment 
+# variable here. If you created the environment variable with the IDE running, stop and restart 
+# the IDE to pick up the environment variable.
+#
+# You can use the Azure CLI to find the connection string:
 # az iot hub device-identity show-connection-string --hub-name {YourIoTHubName} --device-id MyNodeDevice --output table
-CONNECTION_STRING = "{Your IoT hub device connection string}"
+CONNECTION_STRING = os.getenv("ConnectionString")
 
 # Define the JSON message to send to IoT Hub.
 TEMPERATURE = 20.0

@@ -1,24 +1,51 @@
 # Copyright (c) Microsoft. All rights reserved.
 # Licensed under the MIT license. See LICENSE file in the project root for full license information.
-import os
+
 import random
 import time
-from azure.iot.device import IoTHubDeviceClient, Message
+import os
+from azure.iot.device import IoTHubDeviceClient, Message, MethodResponse
 
-# The device connection authenticates your device to your IoT hub. The connection string for 
-# a device should never be stored in code. For the sake of simplicity we're using an environment 
-# variable here. If you created the environment variable with the IDE running, stop and restart 
-# the IDE to pick up the environment variable.
-#
-# You can use the Azure CLI to find the connection string:
+# The device connection string to authenticate the device with your IoT hub.
+# Using the Azure CLI:
 # az iot hub device-identity show-connection-string --hub-name {YourIoTHubName} --device-id MyNodeDevice --output table
-
 CONNECTION_STRING = os.getenv("IOTHUB_DEVICE_CONNECTION_STRING")
 
 # Define the JSON message to send to IoT Hub.
 TEMPERATURE = 20.0
 HUMIDITY = 60
 MSG_TXT = '{{"temperature": {temperature},"humidity": {humidity}}}'
+
+INTERVAL = 1
+
+
+def create_client():
+    # Create an IoT Hub client
+    client = IoTHubDeviceClient.create_from_connection_string(CONNECTION_STRING)
+
+    # Define a method request handler
+    def method_request_handler(method_request):
+        if method_request.name == "SetTelemetryInterval":
+            try:
+                global INTERVAL
+                INTERVAL = int(method_request.payload)
+            except ValueError:
+                response_payload = {"Response": "Invalid parameter"}
+                response_status = 400
+            else:
+                response_payload = {"Response": "Executed direct method {}".format(method_request.name)}
+                response_status = 200
+        else:
+            response_payload = {"Response": "Direct method {} not defined".format(method_request.name)}
+            response_status = 404
+
+        method_response = MethodResponse.create_from_method_request(method_request, response_status, response_payload)
+        client.send_method_response(method_response)
+
+    # Attach the method request handler
+    client.on_method_request_received = method_request_handler
+
+    return client
 
 
 def run_telemetry_sample(client):
@@ -44,27 +71,27 @@ def run_telemetry_sample(client):
         # Send the message.
         print("Sending message: {}".format(message))
         client.send_message(message)
-        print("Message successfully sent")
-        time.sleep(10)
+        print("Message sent")
+        time.sleep(INTERVAL)
 
 
 def main():
-    print("IoT Hub Quickstart #1 - Simulated device")
-    print("Press Ctrl-C to exit")
+    print ("IoT Hub Quickstart #2 - Simulated device")
+    print ("Press Ctrl-C to exit")
 
     # Instantiate the client. Use the same instance of the client for the duration of
     # your application
-    client = IoTHubDeviceClient.create_from_connection_string(CONNECTION_STRING)
+    client = create_client()
 
-    # Run Sample
+    # Send telemetry
     try:
         run_telemetry_sample(client)
     except KeyboardInterrupt:
         print("IoTHubClient sample stopped by user")
     finally:
-        # Upon application exit, shut down the client
         print("Shutting down IoTHubClient")
         client.shutdown()
+
 
 if __name__ == '__main__':
     main()

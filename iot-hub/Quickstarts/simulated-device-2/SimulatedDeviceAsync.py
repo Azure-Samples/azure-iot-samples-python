@@ -43,8 +43,13 @@ def create_client():
         method_response = MethodResponse.create_from_method_request(method_request, response_status, response_payload)
         await client.send_method_response(method_response)
 
-    # Attach the method request handler
-    client.on_method_request_received = method_request_handler
+    try:
+        # Attach the method request handler
+        client.on_method_request_received = method_request_handler
+    except:
+        # Clean up in the event of failure
+        client.shutdown()
+        raise
 
     return client
 

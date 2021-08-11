@@ -32,8 +32,12 @@ def create_client():
         else:
             print("Message received on unknown input: {}".format(message.input_name))
 
-    # Set handler
-    client.on_message_received = receive_message_handler
+    try:
+        # Set handler
+        client.on_message_received = receive_message_handler
+    except:
+        # Cleanup
+        client.shutdown()
 
     return client
 
@@ -42,9 +46,7 @@ def main():
     print ( "\nPython {}\n".format(sys.version) )
     print ( "IoT Hub Client for Python" )
 
-    client = create_client()
-
-    # Event indicating client stop
+    # Event indicating sample stop
     stop_event = threading.Event()
 
     # Define a signal handler that will indicate Edge termination of the Module
@@ -54,6 +56,9 @@ def main():
 
     # Attach the signal handler
     signal.signal(signal.SIGTERM, module_termination_handler)
+
+    # Create the client
+    client = create_client()
 
     try:
         # This will be triggered by Edge termination signal

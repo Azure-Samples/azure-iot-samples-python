@@ -45,7 +45,7 @@ The above links have documentation on samples on how to use the checkpoint store
 To use web socket, you need to specify param `transport_type` when creating the `EventHubConsumerClient`.
 To use http proxy, you need to specify param `http_proxy` when creating the `EventHubConsumerClient`.
 ```python
-from azure.eventhub import TrasnportType
+from azure.eventhub import TransportType
 from azure.eventhub.aio import EventHubConsumerClient  # This is async API. For sync API, remove ".aio" 
 client = EventHubConsumerClient.from_connection_string(
     conn_str=CONNECTION_STR,

@@ -1,6 +1,7 @@
 # ARCHIVED
 
 > **Note**
+>
 > All the samples have been moved to our main repository [azure-iot-sdk-python](https://github.com/Azure/azure-iot-sdk-python).
 >
 > Please submit an Issue or PR in the [azure-iot-sdk-python](https://github.com/Azure/azure-iot-sdk-python) repository if there are additional samples you would like to see.
